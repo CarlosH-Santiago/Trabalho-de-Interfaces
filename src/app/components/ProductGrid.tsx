@@ -1,7 +1,7 @@
-import { motion } from 'motion/react';
-import { Heart } from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import { useEffect, useRef, useState } from 'react';
+import { motion } from "motion/react";
+import { Heart } from "lucide-react";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useEffect, useRef, useState } from "react";
 
 interface Product {
   id: number;
@@ -14,49 +14,63 @@ interface Product {
 const products: Product[] = [
   {
     id: 1,
-    name: 'Camisa Linho Premium',
-    category: 'Camisaria',
-    price: 'R$ 680',
-    image: 'https://images.unsplash.com/photo-1626987937686-e8806e7bc8fc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwbW9kZWwlMjB3aGl0ZSUyMGJhY2tncm91bmR8ZW58MXx8fHwxNzcyODMwMTM0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    name: "Camisa Linho Premium",
+    category: "Camisaria",
+    price: "R$ 680",
+    image:
+      "https://images.unsplash.com/photo-1626987937686-e8806e7bc8fc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwbW9kZWwlMjB3aGl0ZSUyMGJhY2tncm91bmR8ZW58MXx8fHwxNzcyODMwMTM0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
   {
     id: 2,
-    name: 'Blazer Alfaiataria',
-    category: 'Alfaiataria',
-    price: 'R$ 1.280',
-    image: 'https://images.unsplash.com/photo-1633655442136-bbc120229009?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBtZW5zd2VhciUyMGNvbGxlY3Rpb258ZW58MXx8fHwxNzcyODMwMTM0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    name: "Blazer Alfaiataria",
+    category: "Alfaiataria",
+    price: "R$ 1.280",
+    image:
+      "https://images.unsplash.com/photo-1633655442136-bbc120229009?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBtZW5zd2VhciUyMGNvbGxlY3Rpb258ZW58MXx8fHwxNzcyODMwMTM0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
   {
     id: 3,
-    name: 'Vestido Minimalista',
-    category: 'Essenciais',
-    price: 'R$ 890',
-    image: 'https://images.unsplash.com/photo-1629922949137-e236a5ab497d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtaW5pbWFsaXN0JTIwZmFzaGlvbiUyMGVkaXRvcmlhbHxlbnwxfHx8fDE3NzI3ODQ3NDB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    name: "Vestido Minimalista",
+    category: "Essenciais",
+    price: "R$ 890",
+    image:
+      "https://images.unsplash.com/photo-1629922949137-e236a5ab497d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtaW5pbWFsaXN0JTIwZmFzaGlvbiUyMGVkaXRvcmlhbHxlbnwxfHx8fDE3NzI3ODQ3NDB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
   {
     id: 4,
-    name: 'Conjunto Premium',
-    category: 'Loungewear',
-    price: 'R$ 1.450',
-    image: 'https://images.unsplash.com/photo-1589986993357-6f9a171e02d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcmVtaXVtJTIwZmFzaGlvbiUyMGxpZmVzdHlsZXxlbnwxfHx8fDE3NzI4MzAxMzV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    name: "Conjunto Premium",
+    category: "Loungewear",
+    price: "R$ 1.450",
+    image:
+      "https://images.unsplash.com/photo-1589986993357-6f9a171e02d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcmVtaXVtJTIwZmFzaGlvbiUyMGxpZmVzdHlsZXxlbnwxfHx8fDE3NzI4MzAxMzV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
   {
     id: 5,
-    name: 'Calça Alfaiataria',
-    category: 'Alfaiataria',
-    price: 'R$ 720',
-    image: 'https://images.unsplash.com/photo-1654707636800-a8f0acefaee9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBjbG90aGluZyUyMGRldGFpbHxlbnwxfHx8fDE3NzI4MzAxMzV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    name: "Calça Alfaiataria",
+    category: "Alfaiataria",
+    price: "R$ 720",
+    image:
+      "https://images.unsplash.com/photo-1654707636800-a8f0acefaee9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBjbG90aGluZyUyMGRldGFpbHxlbnwxfHx8fDE3NzI4MzAxMzV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
   {
     id: 6,
-    name: 'Trench Coat',
-    category: 'Outerwear',
-    price: 'R$ 2.180',
-    image: 'https://images.unsplash.com/photo-1761637328025-bccb6ce8af34?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwbG9va2Jvb2slMjBtb2Rlcm58ZW58MXx8fHwxNzcyODMwMTM1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
-  }
+    name: "Trench Coat",
+    category: "Outerwear",
+    price: "R$ 2.180",
+    image:
+      "https://images.unsplash.com/photo-1761637328025-bccb6ce8af34?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwbG9va2Jvb2slMjBtb2Rlcm58ZW58MXx8fHwxNzcyODMwMTM1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+  },
 ];
 
-function ProductCard({ product, index }: { product: Product; index: number }) {
+function ProductCard({
+  product,
+  index,
+  onAddToCart,
+}: {
+  product: Product;
+  index: number;
+  onAddToCart: () => void;
+}) {
   const [isInView, setIsInView] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -67,7 +81,7 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
           setIsInView(true);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     );
 
     if (cardRef.current) {
@@ -95,13 +109,18 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
           <Heart className="w-5 h-5" />
         </button>
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/40 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <button className="w-full bg-white text-black py-3 tracking-wide hover:bg-[#DC2626] hover:text-white transition-colors">
+          <button
+            onClick={onAddToCart}
+            className="w-full bg-white text-black py-3 tracking-wide hover:bg-[#DC2626] hover:text-white transition-colors"
+          >
             Adicionar
           </button>
         </div>
       </div>
       <div className="space-y-1">
-        <p className="text-xs tracking-[0.2em] uppercase text-gray-500">{product.category}</p>
+        <p className="text-xs tracking-[0.2em] uppercase text-gray-500">
+          {product.category}
+        </p>
         <h3 className="text-base">{product.name}</h3>
         <p className="text-sm text-gray-700">{product.price}</p>
       </div>
@@ -109,7 +128,11 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
   );
 }
 
-export function ProductGrid() {
+interface ProductGridProps {
+  onAddToCart: () => void;
+}
+
+export function ProductGrid({ onAddToCart }: ProductGridProps) {
   return (
     <section className="py-24 lg:py-32 bg-white">
       <div className="container mx-auto px-6 lg:px-12">
@@ -120,20 +143,29 @@ export function ProductGrid() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 
+          <h2
             className="text-4xl lg:text-5xl mb-4"
-            style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontStyle: "italic",
+            }}
           >
             Novidades da Estação
           </h2>
           <p className="text-gray-600 max-w-xl mx-auto">
-            Peças selecionadas que combinam design atemporal com a mais alta qualidade
+            Peças selecionadas que combinam design atemporal com a mais alta
+            qualidade
           </p>
         </motion.div>
 
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 lg:gap-x-8 lg:gap-y-16">
           {products.map((product, index) => (
-            <ProductCard key={product.id} product={product} index={index} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              index={index}
+              onAddToCart={onAddToCart}
+            />
           ))}
         </div>
       </div>
