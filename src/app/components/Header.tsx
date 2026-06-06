@@ -1,13 +1,19 @@
 import { ShoppingBag, Search, Menu, Heart, User, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+// 1. Importando o contexto (ajuste o caminho se necessário)
+import { useCart } from "../../contexts/CartContext";
 
+// 2. Adicionando a nova propriedade de clique
 interface HeaderProps {
   onUserClick?: () => void;
+  onCartClick?: () => void;
 }
 
-export function Header({ onUserClick }: HeaderProps) {
+export function Header({ onUserClick, onCartClick }: HeaderProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  // 3. Puxando a quantidade de itens do carrinho em tempo real
+  const { cartItemCount } = useCart();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-black/5">
@@ -19,29 +25,19 @@ export function Header({ onUserClick }: HeaderProps) {
           </button>
 
           <nav className="hidden lg:flex items-center gap-8">
-            <a
-              href="#"
-              className="text-sm tracking-wide hover:text-[#DC2626] transition-colors"
-            >
+            <a href="#" className="text-sm tracking-wide hover:text-[#DC2626] transition-colors">
               Novo
             </a>
-            <a
-              href="#"
-              className="text-sm tracking-wide hover:text-[#DC2626] transition-colors"
-            >
+            <a href="#" className="text-sm tracking-wide hover:text-[#DC2626] transition-colors">
               Coleções
             </a>
-            <a
-              href="#"
-              className="text-sm tracking-wide hover:text-[#DC2626] transition-colors"
-            >
+            <a href="#" className="text-sm tracking-wide hover:text-[#DC2626] transition-colors">
               Editorial
             </a>
           </nav>
 
           {/* Logo / Container de Pesquisa */}
           <div className="absolute left-1/2 -translate-x-1/2 w-full max-w-[600px] md:max-w-xl flex justify-center px-4">
-            {/* ^ ALTERE A LARGURA ACIMA (ex: max-w-2xl ou max-w-[600px]) */}
             <AnimatePresence mode="wait">
               {!isSearchOpen ? (
                 <motion.h1
@@ -61,7 +57,6 @@ export function Header({ onUserClick }: HeaderProps) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
                   className="w-full flex items-center bg-gray-100/80 px-12 py-4 border-b border-black/20 shadow-md backdrop-blur-md"
-                  // ^ ALTERE A ALTURA NO 'py-6' (ex: py-8 para mais alto, py-4 para mais baixo)
                 >
                   <input
                     autoFocus
@@ -95,10 +90,21 @@ export function Header({ onUserClick }: HeaderProps) {
             <button className="p-2 hover:bg-gray-50 transition-colors hidden lg:block">
               <Heart className="w-5 h-5" />
             </button>
-            <button className="p-2 hover:bg-gray-50 transition-colors relative">
+            
+            {/* 4. Botão do Carrinho Atualizado */}
+            <button 
+              onClick={onCartClick} 
+              className="p-2 hover:bg-gray-50 transition-colors relative cursor-pointer"
+            >
               <ShoppingBag className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-[#DC2626] rounded-full"></span>
+              {/* Lógica condicional: a bolinha só aparece se houver 1 ou mais itens */}
+              {cartItemCount > 0 && (
+                <span className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 text-[10px] text-white bg-[#DC2626] rounded-full font-bold">
+                  {cartItemCount}
+                </span>
+              )}
             </button>
+            
           </div>
         </div>
       </div>

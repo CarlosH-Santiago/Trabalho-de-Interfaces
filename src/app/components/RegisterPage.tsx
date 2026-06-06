@@ -213,7 +213,7 @@ export function RegisterPage({ onRegisterSuccess }: RegisterPageProps) {
             className={`w-full py-4 rounded-2xl text-xs tracking-[0.2em] uppercase font-semibold transition-all shadow-lg mt-6 ${
               step === 1
                 ? "bg-black text-white hover:bg-gray-800"
-                : "bg-[#22C55E] text-white hover:bg-[#16a34a] shadow-green-100"
+                : "bg-[#111111] text-white hover:bg-[#333333] shadow-green-100"
             }`}
           >
             {step === 1 ? "Próximo Passo" : "Finalizar Cadastro"}

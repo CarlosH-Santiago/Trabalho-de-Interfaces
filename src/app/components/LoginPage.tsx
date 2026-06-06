@@ -84,7 +84,7 @@ export function LoginPage({ onLoginSuccess, onRegisterClick }: LoginPageProps) {
           <div className="pt-4 space-y-6">
             <button
               type="submit"
-              className="w-full bg-[#22C55E] text-white py-4 rounded-2xl text-xs tracking-[0.2em] uppercase font-semibold hover:bg-[#16a34a] transition-colors shadow-lg shadow-green-100"
+              className="w-full bg-[#111111] text-white py-4 rounded-2xl text-xs tracking-[0.2em] uppercase font-semibold hover:bg-[#2e2e2e] transition-colors shadow-lg shadow-green-100"
             >
               Acessar
             </button>

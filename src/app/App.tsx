@@ -11,12 +11,13 @@ import { CartNotification } from "./components/CartNotification";
 import { LoginPage } from "./components/LoginPage";
 import { RegisterPage } from "./components/RegisterPage";
 import { LoginSuccessNotification } from "./components/LoginSuccessNotification";
+import { CartPage } from "./components/CartPage";
 
 export default function App() {
   const [isInventoryOpen, setIsInventoryOpen] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const [isLoginSuccessOpen, setIsLoginSuccessOpen] = useState(false);
-  const [view, setView] = useState<"home" | "login" | "register">("home");
+  const [view, setView] = useState<"home" | "login" | "register" | "cart" | "products" | "favorites" | "collections" | "editorial" | "settings">("home");
 
   return (
     <div className="min-h-screen bg-white">
@@ -30,7 +31,10 @@ export default function App() {
         </button>
       )}
 
-      <Header onUserClick={() => setView(view === "home" ? "login" : "home")} />
+      <Header 
+  onUserClick={() => setView(view === "home" ? "login" : "home")} 
+  onCartClick={() => setView("cart")} 
+/>
       <main>
         {view === "home" ? (
           <>
@@ -44,9 +48,12 @@ export default function App() {
             onLoginSuccess={() => setIsLoginSuccessOpen(true)}
             onRegisterClick={() => setView("register")}
           />
-        ) : (
+        ) : view === "register" ? (
           <RegisterPage onRegisterSuccess={() => setView("home")} />
-        )}
+        ) : view === "cart" ? (
+          // Renderizando o carrinho e passando a função para voltar à loja
+          <CartPage onBack={() => setView("home")} />
+        ) : null}
       </main>
       <Footer isMinimal={view !== "home"} />
 
