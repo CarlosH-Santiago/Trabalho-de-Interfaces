@@ -37,19 +37,19 @@ export function RegisterPage({ onRegisterSuccess }: RegisterPageProps) {
     <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden pt-20">
       <div className="absolute inset-0 flex flex-col z-0">
         <div className="h-1/2 bg-[#DC2626]" />
-        <div className="h-1/2 bg-white" />
+        <div className="h-1/2 bg-background" />
       </div>
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative z-10 bg-white w-full max-w-lg mx-6 p-8 md:p-12 rounded-[2rem] shadow-2xl border border-gray-100"
+        className="relative z-10 bg-background w-full max-w-lg mx-6 p-8 md:p-12 rounded-[2rem] shadow-2xl border border-gray-100"
       >
         <div className="flex items-center justify-between mb-8">
           {step === 2 && (
             <button
               onClick={() => setStep(1)}
-              className="text-gray-400 hover:text-black transition-colors"
+              className="text-gray-400 hover:text-foreground transition-colors"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -124,7 +124,7 @@ export function RegisterPage({ onRegisterSuccess }: RegisterPageProps) {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-foreground"
                     >
                       {showPassword ? (
                         <EyeOff className="w-4 h-4" />
@@ -212,8 +212,8 @@ export function RegisterPage({ onRegisterSuccess }: RegisterPageProps) {
             type="submit"
             className={`w-full py-4 rounded-2xl text-xs tracking-[0.2em] uppercase font-semibold transition-all shadow-lg mt-6 ${
               step === 1
-                ? "bg-black text-white hover:bg-gray-800"
-                : "bg-[#111111] text-white hover:bg-[#333333] shadow-green-100"
+                ? "bg-black text-foreground hover:bg-gray-800"
+                : "bg-[#111111] text-foreground hover:bg-[#333333] shadow-green-100"
             }`}
           >
             {step === 1 ? "Próximo Passo" : "Finalizar Cadastro"}

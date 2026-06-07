@@ -16,22 +16,22 @@ export function Header({ onUserClick, onCartClick }: HeaderProps) {
   const { cartItemCount } = useCart();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-black/5">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-black/5">
       <div className="container mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between h-20">
           {/* Left Menu */}
-          <button className="lg:hidden p-2 hover:bg-gray-50 transition-colors">
+          <button className="lg:hidden p-2 hover:bg-card transition-colors">
             <Menu className="w-5 h-5" />
           </button>
 
           <nav className="hidden lg:flex items-center gap-8">
-            <a href="#" className="text-sm tracking-wide hover:text-[#DC2626] transition-colors">
+            <a href="#" className="text-sm tracking-wide hover:text-accent transition-colors">
               Novo
             </a>
-            <a href="#" className="text-sm tracking-wide hover:text-[#DC2626] transition-colors">
+            <a href="#" className="text-sm tracking-wide hover:text-accent transition-colors">
               Coleções
             </a>
-            <a href="#" className="text-sm tracking-wide hover:text-[#DC2626] transition-colors">
+            <a href="#" className="text-sm tracking-wide hover:text-accent transition-colors">
               Editorial
             </a>
           </nav>
@@ -73,7 +73,7 @@ export function Header({ onUserClick, onCartClick }: HeaderProps) {
           <div className="flex items-center gap-4">
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="p-2 hover:bg-gray-50 transition-colors cursor-pointer group"
+              className="p-2 hover:bg-card transition-colors cursor-pointer group"
             >
               {isSearchOpen ? (
                 <X className="w-5 h-5 group-hover:scale-110 transition-transform" />
@@ -83,23 +83,23 @@ export function Header({ onUserClick, onCartClick }: HeaderProps) {
             </button>
             <button
               onClick={onUserClick}
-              className="p-2 hover:bg-gray-50 transition-colors hidden lg:block cursor-pointer group"
+              className="p-2 hover:bg-card transition-colors hidden lg:block cursor-pointer group"
             >
               <User className="w-5 h-5 group-hover:scale-110 transition-transform" />
             </button>
-            <button className="p-2 hover:bg-gray-50 transition-colors hidden lg:block">
+            <button className="p-2 hover:bg-card transition-colors hidden lg:block">
               <Heart className="w-5 h-5" />
             </button>
             
             {/* 4. Botão do Carrinho Atualizado */}
             <button 
               onClick={onCartClick} 
-              className="p-2 hover:bg-gray-50 transition-colors relative cursor-pointer"
+              className="p-2 hover:bg-card transition-colors relative cursor-pointer"
             >
               <ShoppingBag className="w-5 h-5" />
               {/* Lógica condicional: a bolinha só aparece se houver 1 ou mais itens */}
               {cartItemCount > 0 && (
-                <span className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 text-[10px] text-white bg-[#DC2626] rounded-full font-bold">
+                <span className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 text-[10px] text-foreground bg-[#DC2626] rounded-full font-bold">
                   {cartItemCount}
                 </span>
               )}

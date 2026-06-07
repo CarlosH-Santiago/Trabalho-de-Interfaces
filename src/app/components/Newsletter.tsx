@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 
 export function Newsletter() {
   return (
-    <section className="py-24 lg:py-32 bg-white">
+    <section className="py-24 lg:py-32 bg-background">
       <div className="container mx-auto px-6 lg:px-12">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -30,14 +30,14 @@ export function Newsletter() {
             />
             <button 
               type="submit"
-              className="group bg-[#DC2626] text-white px-8 py-4 flex items-center justify-center gap-3 hover:bg-[#B91C1C] transition-all duration-300"
+              className="group bg-[#DC2626] text-foreground px-8 py-4 flex items-center justify-center gap-3 hover:bg-[#B91C1C] transition-all duration-300"
             >
               <span className="tracking-wide">Assinar</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
 
-          <p className="text-xs text-gray-500 mt-6">
+          <p className="text-xs text-muted-foreground mt-6">
             Ao se inscrever, você concorda com nossa política de privacidade.
           </p>
         </motion.div>

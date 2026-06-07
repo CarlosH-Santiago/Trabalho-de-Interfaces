@@ -1,114 +1,57 @@
 import { motion } from "motion/react";
-import { Heart } from "lucide-react";
+import { Heart, AlertCircle, Loader2 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { useEffect, useRef, useState } from "react";
-// 1. Importando o contexto do carrinho
-import { useCart } from "../../contexts/CartContext";
+import { useCart } from "../../contexts/CartContext"; 
+import { api } from "../../services/api"; 
 
-// 2. Ajustando a interface para receber dados como se viessem de uma API real
 interface Product {
-  id: string; // Alterado para string
+  id: string;
   name: string;
   category: string;
-  price: number; // Alterado para number para permitir os cálculos
+  price: number;
   image: string;
 }
 
-// Mock ajustado (preços como números reais e IDs como strings)
-const products: Product[] = [
-  {
-    id: "1",
-    name: "Camisa Linho Premium",
-    category: "Camisaria",
-    price: 680,
-    image:
-      "https://images.unsplash.com/photo-1626987937686-e8806e7bc8fc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwbW9kZWwlMjB3aGl0ZSUyMGJhY2tncm91bmR8ZW58MXx8fHwxNzcyODMwMTM0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-  {
-    id: "2",
-    name: "Blazer Alfaiataria",
-    category: "Alfaiataria",
-    price: 1280,
-    image:
-      "https://images.unsplash.com/photo-1633655442136-bbc120229009?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBtZW5zd2VhciUyMGNvbGxlY3Rpb258ZW58MXx8fHwxNzcyODMwMTM0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-  {
-    id: "3",
-    name: "Vestido Minimalista",
-    category: "Essenciais",
-    price: 890,
-    image:
-      "https://images.unsplash.com/photo-1629922949137-e236a5ab497d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtaW5pbWFsaXN0JTIwZmFzaGlvbiUyMGVkaXRvcmlhbHxlbnwxfHx8fDE3NzI3ODQ3NDB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-  {
-    id: "4",
-    name: "Conjunto Premium",
-    category: "Loungewear",
-    price: 1450,
-    image:
-      "https://images.unsplash.com/photo-1589986993357-6f9a171e02d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcmVtaXVtJTIwZmFzaGlvbiUyMGxpZmVzdHlsZXxlbnwxfHx8fDE3NzI4MzAxMzV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-  {
-    id: "5",
-    name: "Calça Alfaiataria",
-    category: "Alfaiataria",
-    price: 720,
-    image:
-      "https://images.unsplash.com/photo-1654707636800-a8f0acefaee9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBjbG90aGluZyUyMGRldGFpbHxlbnwxfHx8fDE3NzI4MzAxMzV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-  {
-    id: "6",
-    name: "Trench Coat",
-    category: "Outerwear",
-    price: 2180,
-    image:
-      "https://images.unsplash.com/photo-1761637328025-bccb6ce8af34?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwbG9va2Jvb2slMjBtb2Rlcm58ZW58MXx8fHwxNzcyODMwMTM1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  },
-];
-
+// 1. Componente de exibição (Presentational) - SEM lógica de API
 function ProductCard({
   product,
   index,
   onAddToCart,
 }: {
   product: Product;
-  index: number;
+  index: number; 
   onAddToCart: () => void;
 }) {
   const [isInView, setIsInView] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-  
-  // 3. Puxando a função de adicionar ao carrinho do nosso "motor"
   const { addToCart } = useCart();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-        }
+        if (entry.isIntersecting) setIsInView(true);
       },
       { threshold: 0.2 },
     );
-
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
-
+    if (cardRef.current) observer.observe(cardRef.current);
+    console.log("Campos disponíveis no produto:", Object.keys(product));
+    console.log("Valor do campo 'price':", product.price);
     return () => observer.disconnect();
   }, []);
+const handleAddToCartClick = () => {
+  // DEBUG: Vamos ver se o preço existe antes de enviar
+  console.log("DEBUGANDO PREÇO:", product.name, product.price);
 
-  // 4. Função intermediária que faz as duas ações exigidas
-  const handleAddToCartClick = () => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-    });
-    // Dispara o toast visual que está no App.tsx
-    onAddToCart(); 
-  };
+  addToCart({
+    id: product.id,
+    name: product.name,
+    price: product.price, // SE ISSO FOR UNDEFINED, O CARRINHO QUEBRA
+    image: product.image,
+  });
+  
+  onAddToCart(); 
+};
 
   return (
     <motion.div
@@ -118,48 +61,91 @@ function ProductCard({
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className="group"
     >
-      <div className="relative aspect-[3/4] overflow-hidden bg-gray-50 mb-4">
+      <div className="relative aspect-[3/4] overflow-hidden bg-card mb-4">
         <ImageWithFallback
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
         />
-        <button className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-[#DC2626] hover:text-white">
+        <button className="absolute top-4 right-4 w-10 h-10 bg-background/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-[#DC2626] hover:text-foreground">
           <Heart className="w-5 h-5" />
         </button>
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/40 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          
-          {/* 5. Conectando o clique no botão */}
           <button
             onClick={handleAddToCartClick}
-            className="w-full bg-white text-black py-3 tracking-wide hover:bg-[#DC2626] hover:text-white transition-colors cursor-pointer"
+            className="w-full bg-background text-foreground py-3 tracking-wide hover:bg-[#DC2626] hover:text-foreground transition-colors cursor-pointer"
           >
             Adicionar
           </button>
-
         </div>
       </div>
       <div className="space-y-1">
-        <p className="text-xs tracking-[0.2em] uppercase text-gray-500">
+        <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground">
           {product.category}
         </p>
         <h3 className="text-base">{product.name}</h3>
-        {/* 6. Formatando o número para o padrão de moeda do Brasil na hora de exibir */}
-        <p className="text-sm text-gray-700">
-          R$ {product.price.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-        </p>
+          <p className="text-sm">
+            {(() => {
+              // 1. Tenta achar o preço no objeto, não importa como esteja escrito
+              const rawPrice = 
+                product.price ?? 
+                (product as any).preco ?? 
+                (product as any).valor ?? 
+                (product as any).Price ?? 
+                (product as any).Preco ?? 
+                0;
+
+              // 2. Log de debug para vermos o que realmente está vindo
+              // console.log("O objeto completo é:", JSON.stringify(product)); 
+
+              // 3. Converte para número se for texto e formata
+              const numericPrice = typeof rawPrice === 'string' ? parseFloat(rawPrice) : rawPrice;
+
+              return typeof numericPrice === 'number' && !isNaN(numericPrice)
+                ? numericPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                : "R$ 0,00";
+            })()}
+          </p>
       </div>
     </motion.div>
   );
 }
 
+// 2. Componente de Grid (Container) - COM lógica de API
 interface ProductGridProps {
   onAddToCart: () => void;
 }
 
 export function ProductGrid({ onAddToCart }: ProductGridProps) {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadCollection() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        // Force o 'data' a ser 'any' para que o TypeScript pare de reclamar
+        const data: any = await api.getProducts(); 
+
+        // Agora ele aceitará acessar .produtos sem erro
+        const arrayParaExibir = Array.isArray(data) ? data : (data.produtos || []);
+        setProducts(arrayParaExibir);
+      } catch (err) {
+        console.error(err);
+        setError("Não foi possível conectar ao servidor.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadCollection();
+  }, []);
+
   return (
-    <section className="py-24 lg:py-32 bg-white">
+    <section className="py-24 lg:py-32 bg-background">
       <div className="container mx-auto px-6 lg:px-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -168,31 +154,39 @@ export function ProductGrid({ onAddToCart }: ProductGridProps) {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2
-            className="text-4xl lg:text-5xl mb-4"
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              fontStyle: "italic",
-            }}
-          >
-            Novidades da Estação
-          </h2>
-          <p className="text-gray-600 max-w-xl mx-auto">
-            Peças selecionadas que combinam design atemporal com a mais alta
-            qualidade
+          <h2 className="text-4xl lg:text-5xl mb-4 font-serif italic">Novidades da Estação</h2>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            Peças selecionadas que combinam design atemporal com a mais alta qualidade
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 lg:gap-x-8 lg:gap-y-16">
-          {products.map((product, index) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              index={index}
-              onAddToCart={onAddToCart}
-            />
-          ))}
-        </div>
+        {isLoading && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin mb-4 text-accent" />
+            <p className="text-xs uppercase tracking-widest">Carregando coleção...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="flex flex-col items-center justify-center py-20 text-red-500">
+            <AlertCircle className="w-8 h-8 mb-4" />
+            <p className="text-xs uppercase tracking-widest">{error}</p>
+          </div>
+        )}
+
+        {!isLoading && !error && (
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 lg:gap-x-8 lg:gap-y-16">
+            {products.map((product, index) => (
+              <ProductCard
+                // Usamos o product.id, mas se ele não existir, usamos o index como fallback
+                key={product.id || index} 
+                product={product}
+                index={index}
+                onAddToCart={onAddToCart}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
