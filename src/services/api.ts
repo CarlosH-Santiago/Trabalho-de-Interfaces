@@ -1,6 +1,5 @@
 // src/services/api.ts
 
-// Tirei a barra do final para não ficar com duas barras (//) na hora do fetch
 const BASE_URL = "https://atelier-back-end.onrender.com"; 
 // const BASE_URL = "http://localhost:3000"; 
 
