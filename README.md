@@ -36,6 +36,7 @@ Para avaliar a arquitetura do painel administrativo, você pode utilizar a conta
 | **E-mail** | `admin@atelier.com` |
 | **Senha** | `admin123` |
 
+
 **Passo a passo:**
 1. Realize o login na página principal com as credenciais acima.
 2. Acesse a página de **Configurações/Perfil**.

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   User, Shield, Settings as SettingsIcon, ArrowLeft, 
-  MapPin, Package, PlusCircle, LogOut, Loader2, CheckCircle, Trash2, Edit2, Globe, Hash, FileText, Map
+  MapPin, Package, PlusCircle, LogOut, Loader2, CheckCircle, Trash2, Edit2
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext"; 
 import { api } from "../../services/api";
@@ -103,7 +103,7 @@ export function SettingsPage({ onBack, theme, toggleTheme }: SettingsPageProps) 
           <span className="uppercase tracking-widest text-xs">Voltar</span>
         </button>
 
-        <h1 className="text-3xl tracking-widest uppercase mb-12 border-b border-border pb-4">Configurações</h1>
+        <h1 className="text-3xl tracking-widest uppercase mb-12 border-b border-border pb-4 text-foreground">Configurações</h1>
 
         <div className="flex flex-col md:flex-row gap-12">
           <aside className="w-full md:w-64 shrink-0 flex flex-col justify-between">
@@ -153,11 +153,11 @@ export function SettingsPage({ onBack, theme, toggleTheme }: SettingsPageProps) 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <label className="text-xs uppercase tracking-widest text-muted-foreground">Nome Completo</label>
-                        <input type="text" defaultValue={user?.nome || ""} className="w-full bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none" />
+                        <input type="text" defaultValue={user?.nome || ""} className="w-full bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
                       </div>
                       <div className="space-y-2">
                         <label className="text-xs uppercase tracking-widest text-muted-foreground">E-mail</label>
-                        <input type="email" defaultValue={user?.email || ""} disabled className="w-full bg-input border border-border p-4 text-sm text-foreground opacity-70 cursor-not-allowed" />
+                        <input type="email" defaultValue={user?.email || ""} disabled className="w-full bg-input border border-border p-4 text-sm text-foreground opacity-70 cursor-not-allowed transition-colors" />
                       </div>
                     </div>
                   </div>
@@ -172,13 +172,13 @@ export function SettingsPage({ onBack, theme, toggleTheme }: SettingsPageProps) 
                       <>
                         <h2 className="text-xl tracking-widest uppercase text-[#DC2626] mb-8 flex items-center gap-3"><Package size={22} /> Painel Administrativo</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <button onClick={() => setAdminView("nova-peca")} className="bg-input border border-border p-8 rounded-xl hover:border-[#DC2626] text-left group">
-                            <PlusCircle className="w-8 h-8 mb-4 group-hover:text-[#DC2626]" />
-                            <p className="text-sm uppercase tracking-widest font-semibold">Nova Peça</p>
+                          <button onClick={() => setAdminView("nova-peca")} className="bg-input border border-border p-8 rounded-xl hover:border-[#DC2626] text-left group transition-colors">
+                            <PlusCircle className="w-8 h-8 mb-4 text-muted-foreground group-hover:text-[#DC2626] transition-colors" />
+                            <p className="text-sm uppercase tracking-widest font-semibold text-foreground">Nova Peça</p>
                           </button>
-                          <button onClick={() => setAdminView("estoque")} className="bg-input border border-border p-8 rounded-xl hover:border-[#DC2626] text-left group">
-                            <Package className="w-8 h-8 mb-4 group-hover:text-[#DC2626]" />
-                            <p className="text-sm uppercase tracking-widest font-semibold">Gerenciar Estoque</p>
+                          <button onClick={() => setAdminView("estoque")} className="bg-input border border-border p-8 rounded-xl hover:border-[#DC2626] text-left group transition-colors">
+                            <Package className="w-8 h-8 mb-4 text-muted-foreground group-hover:text-[#DC2626] transition-colors" />
+                            <p className="text-sm uppercase tracking-widest font-semibold text-foreground">Gerenciar Estoque</p>
                           </button>
                         </div>
                       </>
@@ -188,15 +188,18 @@ export function SettingsPage({ onBack, theme, toggleTheme }: SettingsPageProps) 
                       <>
                         <div className="flex items-center justify-between mb-8">
                           <h2 className="text-xl tracking-widest uppercase text-[#DC2626] flex items-center gap-3"><PlusCircle size={22} /> Cadastrar Nova Peça</h2>
-                          <button onClick={() => setAdminView("menu")} className="text-xs underline text-muted-foreground">Cancelar</button>
+                          <button onClick={() => setAdminView("menu")} className="text-xs underline text-muted-foreground hover:text-foreground transition-colors">Cancelar</button>
                         </div>
-                        {successMsg && <div className="mb-6 p-4 bg-green-500/10 text-green-500 text-sm rounded">{successMsg}</div>}
+                        {successMsg && <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 text-green-500 text-sm rounded flex items-center gap-3"><CheckCircle size={18} /> {successMsg}</div>}
                         <form onSubmit={handleCreateProduct} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <input type="text" required value={productForm.name} onChange={(e) => setProductForm({...productForm, name: e.target.value})} placeholder="Nome" className="md:col-span-2 bg-input border border-border p-4 text-sm" />
-                          <input type="text" required value={productForm.category} onChange={(e) => setProductForm({...productForm, category: e.target.value})} placeholder="Categoria" className="bg-input border border-border p-4 text-sm" />
-                          <input type="number" step="0.01" required value={productForm.price} onChange={(e) => setProductForm({...productForm, price: e.target.value})} placeholder="Preço" className="bg-input border border-border p-4 text-sm" />
-                          <input type="url" required value={productForm.image} onChange={(e) => setProductForm({...productForm, image: e.target.value})} placeholder="URL Imagem" className="md:col-span-2 bg-input border border-border p-4 text-sm" />
-                          <button type="submit" className="md:col-span-2 bg-[#DC2626] text-white p-4 uppercase text-xs">{isSubmitting ? "Salvando..." : "Finalizar"}</button>
+                          <input type="text" required value={productForm.name} onChange={(e) => setProductForm({...productForm, name: e.target.value})} placeholder="Nome" className="md:col-span-2 bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
+                          <input type="text" required value={productForm.category} onChange={(e) => setProductForm({...productForm, category: e.target.value})} placeholder="Categoria" className="bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
+                          <input type="number" step="0.01" required value={productForm.price} onChange={(e) => setProductForm({...productForm, price: e.target.value})} placeholder="Preço" className="bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
+                          <input type="url" required value={productForm.image} onChange={(e) => setProductForm({...productForm, image: e.target.value})} placeholder="URL Imagem" className="md:col-span-2 bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
+                          <button type="submit" disabled={isSubmitting} className="md:col-span-2 flex items-center justify-center gap-2 bg-[#DC2626] text-white p-4 uppercase text-xs hover:bg-[#b91c1c] transition-colors disabled:opacity-50">
+                            {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                            {isSubmitting ? "Salvando..." : "Finalizar Cadastro"}
+                          </button>
                         </form>
                       </>
                     )}
@@ -204,11 +207,11 @@ export function SettingsPage({ onBack, theme, toggleTheme }: SettingsPageProps) 
                     {adminView === "estoque" && (
                       <div className="space-y-6">
                         <div className="flex items-center justify-between mb-4">
-                          <h2 className="text-xl tracking-widest uppercase text-[#DC2626]"><Package size={22} /> Estoque</h2>
-                          <button onClick={() => setAdminView("menu")} className="text-xs underline">Voltar</button>
+                          <h2 className="text-xl tracking-widest uppercase text-[#DC2626] flex items-center gap-3"><Package size={22} /> Estoque</h2>
+                          <button onClick={() => setAdminView("menu")} className="text-xs underline text-muted-foreground hover:text-foreground transition-colors">Voltar</button>
                         </div>
                         <div className="bg-input border border-border rounded-xl overflow-hidden">
-                          <table className="w-full text-left text-xs uppercase">
+                          <table className="w-full text-left text-xs uppercase tracking-widest text-foreground">
                             <thead className="bg-card text-muted-foreground">
                               <tr><th className="p-4">Peça</th><th className="p-4">Preço</th><th className="p-4 text-center">Ações</th></tr>
                             </thead>
@@ -218,7 +221,8 @@ export function SettingsPage({ onBack, theme, toggleTheme }: SettingsPageProps) 
                                   <td className="p-4">{prod.name}</td>
                                   <td className="p-4">R$ {prod.price.toFixed(2)}</td>
                                   <td className="p-4 flex justify-center gap-4">
-                                    <button onClick={() => handleDelete(prod.id)} className="hover:text-red-500"><Trash2 size={16}/></button>
+                                    <button className="text-muted-foreground hover:text-blue-500 transition-colors"><Edit2 size={16}/></button>
+                                    <button onClick={() => handleDelete(prod.id)} className="text-muted-foreground hover:text-red-500 transition-colors"><Trash2 size={16}/></button>
                                   </td>
                                 </tr>
                               ))}
@@ -233,18 +237,19 @@ export function SettingsPage({ onBack, theme, toggleTheme }: SettingsPageProps) 
                 {/* SEGURANÇA */}
                 {activeTab === "seguranca" && (
                   <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-card p-8 rounded-xl border border-border">
-                        <h2 className="text-xl tracking-widest uppercase mb-6">Alterar Senha</h2>
-                        <div className="space-y-4">
-                            <input type="password" placeholder="Senha Atual" className="w-full bg-input border border-border p-4 text-sm" />
-                            <input type="password" placeholder="Nova Senha" className="w-full bg-input border border-border p-4 text-sm" />
-                            <button className="bg-background border border-border px-8 py-3 text-xs uppercase">Atualizar</button>
+                    <div className="bg-card p-8 rounded-xl border border-border flex flex-col justify-between">
+                        <h2 className="text-xl tracking-widest uppercase mb-6 text-foreground">Alterar Senha</h2>
+                        <div className="space-y-4 mb-6">
+                            <input type="password" placeholder="Senha Atual" className="w-full bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
+                            <input type="password" placeholder="Nova Senha" className="w-full bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
                         </div>
+                        <button className="bg-background border border-border text-foreground px-8 py-3 text-xs uppercase hover:border-foreground transition-colors w-fit">Atualizar</button>
                     </div>
                     <div className="bg-card p-8 rounded-xl border border-border border-dashed flex flex-col items-center justify-center text-center">
-                        <Shield className="w-12 h-12 mb-4" />
-                        <h3 className="text-sm uppercase tracking-widest mb-2">Autenticação 2FA</h3>
-                        <button className="border border-border px-8 py-3 text-xs uppercase">Ativar</button>
+                        <Shield className="w-12 h-12 mb-4 text-muted-foreground" />
+                        <h3 className="text-sm uppercase tracking-widest mb-2 text-foreground">Autenticação 2FA</h3>
+                        <p className="text-xs text-muted-foreground mb-6">Aumente a segurança da sua conta.</p>
+                        <button className="bg-background border border-border text-foreground px-8 py-3 text-xs uppercase hover:border-foreground transition-colors">Ativar</button>
                     </div>
                   </div>
                 )}
@@ -253,21 +258,32 @@ export function SettingsPage({ onBack, theme, toggleTheme }: SettingsPageProps) 
                 {activeTab === "geral" && (
                   <div className="md:col-span-2 space-y-6">
                     <div className="bg-card p-8 rounded-xl border border-border">
-                      <h2 className="text-xl tracking-widest uppercase mb-6 flex items-center gap-3"><MapPin size={20} /> Endereço</h2>
+                      <h2 className="text-xl tracking-widest uppercase mb-6 flex items-center gap-3 text-foreground"><MapPin size={20} className="text-[#DC2626]" /> Endereço</h2>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <input type="text" placeholder="CEP" className="bg-input border border-border p-4 text-sm" />
-                        <input type="text" placeholder="Endereço" className="col-span-2 bg-input border border-border p-4 text-sm" />
-                        <input type="text" placeholder="Número" className="bg-input border border-border p-4 text-sm" />
-                        <input type="text" placeholder="Cidade" className="bg-input border border-border p-4 text-sm" />
-                        <input type="text" placeholder="Estado" className="bg-input border border-border p-4 text-sm" />
+                        <input type="text" placeholder="CEP" className="bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
+                        <input type="text" placeholder="Endereço" className="col-span-2 bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
+                        <input type="text" placeholder="Número" className="bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
+                        <input type="text" placeholder="Cidade" className="bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
+                        <input type="text" placeholder="Estado" className="bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
                       </div>
                     </div>
                     <div className="bg-card p-8 rounded-xl border border-border flex items-center justify-between">
                         <div>
-                            <p className="text-sm">Modo Escuro</p>
+                            <p className="text-sm text-foreground">Modo Escuro</p>
                             <p className="text-xs text-muted-foreground">Alternar tema visual</p>
                         </div>
-                        <button onClick={toggleTheme} className={`w-14 h-8 rounded-full p-1 transition-colors ${theme === "dark" ? "bg-[#DC2626]" : "bg-zinc-700"}`} />
+                        <button
+                          onClick={toggleTheme}
+                          className={`w-14 h-8 flex items-center rounded-full p-1 transition-colors duration-300 ${
+                            theme === "dark" ? "bg-[#DC2626]" : "bg-zinc-300"
+                          }`}
+                        >
+                          <motion.div
+                            className="bg-white w-6 h-6 rounded-full shadow-md"
+                            animate={{ x: theme === "dark" ? 24 : 0 }}
+                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                          />
+                        </button>
                     </div>
                   </div>
                 )}
