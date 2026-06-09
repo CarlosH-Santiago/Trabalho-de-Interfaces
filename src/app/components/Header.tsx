@@ -1,112 +1,79 @@
-import { ShoppingBag, Search, Menu, Heart, User, X } from "lucide-react";
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-// 1. Importando o contexto (ajuste o caminho se necessário)
+import { Search, User, Heart, ShoppingBag } from "lucide-react";
 import { useCart } from "../../contexts/CartContext";
 
-// 2. Adicionando a nova propriedade de clique
 interface HeaderProps {
-  onUserClick?: () => void;
-  onCartClick?: () => void;
+  onCartClick: () => void;
+  onUserClick: () => void;
+  showBackButton?: boolean;
+  onBackClick?: () => void;
+  onFavoritesClick?: () => void;
 }
 
-export function Header({ onUserClick, onCartClick }: HeaderProps) {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  // 3. Puxando a quantidade de itens do carrinho em tempo real
-  const { cartItemCount } = useCart();
+export function Header({ onCartClick, onUserClick, showBackButton, onBackClick, onFavoritesClick }: HeaderProps) {
+  
+  // 1. Forçamos o TypeScript a aceitar as variações do nome da sua lista de carrinho
+  const cartContext = useCart() as any;
+  const listaDoCarrinho = cartContext.cart || cartContext.items || cartContext.cartItems || [];
+
+  // 2. Tipamos explicitamente o sum (number) e o item (any) para limpar os erros do TS
+  const itemCount = listaDoCarrinho.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-black/5">
-      <div className="container mx-auto px-6 lg:px-12">
-        <div className="flex items-center justify-between h-20">
-          {/* Left Menu */}
-          <button className="lg:hidden p-2 hover:bg-card transition-colors">
-            <Menu className="w-5 h-5" />
-          </button>
-
-          <nav className="hidden lg:flex items-center gap-8">
-            <a href="#" className="text-sm tracking-wide hover:text-accent transition-colors">
-              Novo
-            </a>
-            <a href="#" className="text-sm tracking-wide hover:text-accent transition-colors">
-              Coleções
-            </a>
-            <a href="#" className="text-sm tracking-wide hover:text-accent transition-colors">
-              Editorial
-            </a>
-          </nav>
-
-          {/* Logo / Container de Pesquisa */}
-          <div className="absolute left-1/2 -translate-x-1/2 w-full max-w-[600px] md:max-w-xl flex justify-center px-4">
-            <AnimatePresence mode="wait">
-              {!isSearchOpen ? (
-                <motion.h1
-                  key="logo"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.4 }}
-                  className="text-2xl tracking-[0.3em] font-light"
-                >
-                  ATELIER
-                </motion.h1>
-              ) : (
-                <motion.div
-                  key="search-input"
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  className="w-full flex items-center bg-gray-100/80 px-12 py-4 border-b border-black/20 shadow-md backdrop-blur-md"
-                >
-                  <input
-                    autoFocus
-                    type="text"
-                    placeholder="O QUE VOCÊ PROCURA?"
-                    className="w-full bg-transparent text-center text-xs tracking-[0.4em] outline-none placeholder:text-gray-400 uppercase font-light"
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Right Icons */}
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="p-2 hover:bg-card transition-colors cursor-pointer group"
-            >
-              {isSearchOpen ? (
-                <X className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              ) : (
-                <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              )}
-            </button>
-            <button
-              onClick={onUserClick}
-              className="p-2 hover:bg-card transition-colors hidden lg:block cursor-pointer group"
-            >
-              <User className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            </button>
-            <button className="p-2 hover:bg-card transition-colors hidden lg:block">
-              <Heart className="w-5 h-5" />
-            </button>
-            
-            {/* 4. Botão do Carrinho Atualizado */}
+    <header className="fixed top-0 w-full bg-background z-50 border-b border-border transition-colors duration-300">
+      <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+        
+        {/* LADO ESQUERDO: Botão de Voltar e Links */}
+        <div className="flex-1 flex items-center gap-8">
+          {showBackButton && (
             <button 
-              onClick={onCartClick} 
-              className="p-2 hover:bg-card transition-colors relative cursor-pointer"
+              onClick={onBackClick}
+              className="group flex items-center text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Voltar"
             >
-              <ShoppingBag className="w-5 h-5" />
-              {/* Lógica condicional: a bolinha só aparece se houver 1 ou mais itens */}
-              {cartItemCount > 0 && (
-                <span className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 text-[10px] text-foreground bg-[#DC2626] rounded-full font-bold">
-                  {cartItemCount}
-                </span>
-              )}
+              <svg width="40" height="12" viewBox="0 0 40 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="group-hover:-translate-x-2 transition-transform duration-500">
+                <path d="M40 6H1M1 6L6 1M1 6L6 11" stroke="currentColor" strokeWidth="1"/>
+              </svg>
             </button>
-            
-          </div>
+          )}
+
+          <nav className="hidden md:flex items-center gap-6 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <a href="#" className="hover:text-foreground transition-colors">Novo</a>
+            <a href="#" className="hover:text-foreground transition-colors">Coleções</a>
+            <a href="#" className="hover:text-foreground transition-colors">Editorial</a>
+          </nav>
         </div>
+
+        {/* CENTRO: Logo */}
+        <div className="flex-1 flex justify-center">
+          <h1 className="text-xl tracking-[0.3em] uppercase font-light cursor-pointer" onClick={onBackClick}>
+            Atelier
+          </h1>
+        </div>
+
+        {/* LADO DIREITO: Ícones */}
+        <div className="flex-1 flex justify-end items-center gap-6 text-muted-foreground">
+          <button className="hover:text-foreground transition-colors">
+            <Search strokeWidth={1.5} className="w-5 h-5" />
+          </button>
+          <button onClick={onUserClick} className="hover:text-foreground transition-colors">
+            <User strokeWidth={1.5} className="w-5 h-5" />
+          </button>
+          <button onClick={onFavoritesClick} className="hover:text-foreground transition-colors">
+            <Heart strokeWidth={1.5} className="w-5 h-5" />
+          </button>
+          
+          <button onClick={onCartClick} className="relative hover:text-foreground transition-colors">
+            <ShoppingBag strokeWidth={1.5} className="w-5 h-5" />
+            
+            {/* BOLINHA COM CONTADOR DINÂMICO */}
+            {itemCount > 0 && (
+              <span className="absolute -top-1.5 -right-2 w-[18px] h-[18px] bg-[#DC2626] text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-background">
+                {itemCount}
+              </span>
+            )}
+          </button>
+        </div>
+        
       </div>
     </header>
   );

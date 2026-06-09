@@ -1,40 +1,79 @@
 // src/services/api.ts
 
-const BASE_URL = "http://localhost:3000";
+// Tirei a barra do final para não ficar com duas barras (//) na hora do fetch
+// const BASE_URL = "https://atelier-back-end.onrender.com"; 
+const BASE_URL = "http://localhost:3000"; 
 
-// O que usamos para enviar ao back-end (POST)
+
 export interface ProductData {
   name: string;
   category: string;
   price: number;
   image: string;
+  stock?: number;  
+  sizes?: string[]; 
 }
 
-// O que a interface visual precisa receber (GET)
 export interface Product extends ProductData {
   id: string;
 }
 
 export const api = {
-  // 1. CORREÇÃO: Tipando explicitamente o retorno como Promise<Product[]>
-  async getProducts(): Promise<Product[]> {
+  login: async (email: string, senha: string) => {
     try {
-      const response = await fetch(`${BASE_URL}/produtos`);
+      const response = await fetch(`${BASE_URL}/users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha }),
+      });
       
       if (!response.ok) {
-        throw new Error("Falha ao buscar os produtos da coleção.");
+        const error = await response.json();
+        throw new Error(error.error || "Erro ao fazer login");
+      }
+      
+      return await response.json();
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Função de Cadastro
+  register: async (nome: string, email: string, senha: string) => {
+    try {
+      const response = await fetch(`${BASE_URL}/users`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome, email, senha }),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Erro ao cadastrar");
+      }
+      
+      return await response.json();
+    } catch (error) {
+      throw error;
+    }
+  },
+  async getProducts(): Promise<Product[]> {
+    try {
+      const response = await fetch(`${BASE_URL}/products`);
+      
+      if (!response.ok) {
+        throw new Error(`Falha ao buscar os produtos. Status: ${response.status}`);
       }
       
       const data = await response.json();
-      // Adicione isso antes do .map
-      console.log("DADO QUE CHEGOU DO BACKEND:", data);
-      return data.map((backendProduct: any) => ({
-        id: backendProduct._id,
-        name: backendProduct.nomeDoProduto, 
-        price: backendProduct.preco,
-        category: "Exclusivo", 
-        image: "https://images.unsplash.com/photo-1626987937686-e8806e7bc8fc?q=80&w=1080",
+      
+      // O ESCUDO: Forçamos a criação da propriedade 'id' usando o '_id' do MongoDB
+      const arrayTratado = data.map((item: any) => ({
+        ...item,
+        id: item.id || item._id // Se não tiver 'id', ele clona o '_id'
       }));
+
+      return arrayTratado;
       
     } catch (error) {
       console.error("Erro na API (GET):", error);
@@ -42,19 +81,34 @@ export const api = {
     }
   },
 
+  // Adicione logo abaixo do getProducts
+  async getProductById(id: string): Promise<Product> {
+    try {
+      const response = await fetch(`${BASE_URL}/products/${id}`);
+      
+      if (!response.ok) {
+        throw new Error("Não foi possível carregar os detalhes da peça.");
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error("Erro na API (GET BY ID):", error);
+      throw error;
+    }
+  },
+
   async createProduct(productData: ProductData) {
     try {
-      const payloadBackend = {
-        nomeDoProduto: productData.name,
-        preco: productData.price,
-        estoque: 10,
-        tamanho: ["P", "M", "G"], 
-      };
-
-      const response = await fetch(`${BASE_URL}/produtos`, {
+      // 3. CORREÇÃO DO POST: Enviamos o dado direto, já que o Mongoose 
+      // agora aceita 'name' e 'price' no lugar de 'nomeDoProduto'
+      const response = await fetch(`${BASE_URL}/products`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payloadBackend),
+        body: JSON.stringify({
+          ...productData,
+          stock: 10,
+          sizes: ["P", "M", "G"]
+        }),
       });
 
       if (!response.ok) {
@@ -65,5 +119,34 @@ export const api = {
       console.error("Erro na API (POST):", error);
       throw error;
     }
-  }
+  },
+
+  async deleteProduct(id: string) {
+    try {
+      const response = await fetch(`${BASE_URL}/products/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Erro ao deletar produto");
+      return await response.json();
+    } catch (error) {
+      console.error("Erro na API (DELETE):", error);
+      throw error;
+    }
+  },
+
+  async updateProduct(id: string, productData: Partial<ProductData>) {
+    try {
+      const response = await fetch(`${BASE_URL}/products/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(productData),
+      });
+      if (!response.ok) throw new Error("Erro ao atualizar produto");
+      return await response.json();
+    } catch (error) {
+      console.error("Erro na API (PUT):", error);
+      throw error;
+    }
+  },
+
 };
