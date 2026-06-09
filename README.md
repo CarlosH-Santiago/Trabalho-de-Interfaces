@@ -33,8 +33,9 @@ Para avaliar a arquitetura do painel administrativo, você pode utilizar a conta
 ### Credenciais de Administrador
 | Campo | Valor |
 | :--- | :--- |
-| **E-mail** | `caos@teste.com` |
-| **Senha** | `senha-segura-123` |
+| **E-mail** | `admin@atelier.com` |
+| **Senha** | `admin123` |
+
 
 **Passo a passo:**
 1. Realize o login na página principal com as credenciais acima.
@@ -62,7 +63,8 @@ Para avaliar a arquitetura do painel administrativo, você pode utilizar a conta
 
 ou acesse esse link: https://atelier-puce-xi.vercel.app/
 
-link do backend: https://github.com/joaopinn/atelier-back-end
+
+Link do backend: https://github.com/joaopinn/atelier-back-end
 ---
 
 ## Arquitetura

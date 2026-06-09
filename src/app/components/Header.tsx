@@ -35,7 +35,6 @@ export function Header({ onCartClick, onUserClick, showBackButton, onBackClick, 
               </svg>
             </button>
           )}
-
         </div>
 
         {/* CENTRO: Logo */}
