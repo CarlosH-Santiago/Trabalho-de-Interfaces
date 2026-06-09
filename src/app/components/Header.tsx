@@ -35,12 +35,6 @@ export function Header({ onCartClick, onUserClick, showBackButton, onBackClick, 
               </svg>
             </button>
           )}
-
-          <nav className="hidden md:flex items-center gap-6 text-[10px] uppercase tracking-widest text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">Novo</a>
-            <a href="#" className="hover:text-foreground transition-colors">Coleções</a>
-            <a href="#" className="hover:text-foreground transition-colors">Editorial</a>
-          </nav>
         </div>
 
         {/* CENTRO: Logo */}
