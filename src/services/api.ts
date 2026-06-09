@@ -148,4 +148,22 @@ export const api = {
     }
   },
 
+  async updatePassword(id: string, data: { senhaAtual: string, novaSenha: string }) {
+    try {
+      const response = await fetch(`${BASE_URL}/users/${id}/password`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erro ao atualizar senha");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Erro na API (updatePassword):", error);
+      throw error;
+    }
+  },
+
 };

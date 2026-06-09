@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   User, Shield, Settings as SettingsIcon, ArrowLeft, 
-  MapPin, Package, PlusCircle, LogOut, Loader2, CheckCircle, Trash2, Edit2
+  MapPin, Package, PlusCircle, LogOut, Loader2, CheckCircle, Trash2, Edit2, Eye, EyeOff
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext"; 
 import { api } from "../../services/api";
@@ -23,6 +23,13 @@ export function SettingsPage({ onBack, theme, toggleTheme }: SettingsPageProps) 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [products, setProducts] = useState<any[]>([]);
+  
+  // Estados de Segurança
+  const [passForm, setPassForm] = useState({ senhaAtual: "", novaSenha: "" });
+  const [isUpdatingPass, setIsUpdatingPass] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); 
+  const [passMsg, setPassMsg] = useState<{type: 'success' | 'error', text: string} | null>(null); // NOVO ESTADO DO POPUP
+  
   const [productForm, setProductForm] = useState({
     name: "",
     category: "",
@@ -44,7 +51,8 @@ export function SettingsPage({ onBack, theme, toggleTheme }: SettingsPageProps) 
 
   const handleLogout = () => {
     logout();
-    onBack(); 
+    // Força o redirecionamento para a página inicial, limpando o cache visual da página de config
+    window.location.href = "/"; 
   };
 
   const fetchProducts = async () => {
@@ -89,14 +97,45 @@ export function SettingsPage({ onBack, theme, toggleTheme }: SettingsPageProps) 
       }, 2000);
     } catch (error) {
       console.error(error);
-      alert("Erro ao cadastrar a peça.");
+      setPassMsg({ type: 'error', text: "Erro ao cadastrar a peça." });
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const handleUpdatePassword = async () => {
+    if (!passForm.senhaAtual || !passForm.novaSenha) {
+      setPassMsg({ type: 'error', text: "Preencha a senha atual e a nova senha." });
+      return;
+    }
+    
+    const userId = user?.id; 
+    
+    if (!userId) {
+      setPassMsg({ type: 'error', text: "Erro de autenticação: Usuário não identificado." });
+      return;
+    }
+
+    setIsUpdatingPass(true);
+    try {
+      await api.updatePassword(userId, passForm);
+      setPassMsg({ type: 'success', text: "Senha alterada com sucesso!" });
+      setPassForm({ senhaAtual: "", novaSenha: "" });
+      
+      // Opcional: fechar o popup automaticamente após 3 segundos
+      setTimeout(() => {
+        setPassMsg(null);
+      }, 3000);
+      
+    } catch (error: any) {
+      setPassMsg({ type: 'error', text: error.message }); 
+    } finally {
+      setIsUpdatingPass(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-input text-foreground p-8 md:p-16 transition-colors duration-300">
+    <div className="min-h-screen bg-input text-foreground p-8 md:p-16 transition-colors duration-300 relative">
       <div className="max-w-6xl mx-auto">
         <button onClick={onBack} className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-12 transition-colors">
           <ArrowLeft size={20} />
@@ -240,10 +279,51 @@ export function SettingsPage({ onBack, theme, toggleTheme }: SettingsPageProps) 
                     <div className="bg-card p-8 rounded-xl border border-border flex flex-col justify-between">
                         <h2 className="text-xl tracking-widest uppercase mb-6 text-foreground">Alterar Senha</h2>
                         <div className="space-y-4 mb-6">
-                            <input type="password" placeholder="Senha Atual" className="w-full bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
-                            <input type="password" placeholder="Nova Senha" className="w-full bg-input border border-border p-4 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" />
+                            
+                            {/* Input Senha Atual */}
+                            <div className="relative">
+                              <input 
+                                type={showPassword ? "text" : "password"} 
+                                value={passForm.senhaAtual}
+                                onChange={(e) => setPassForm({...passForm, senhaAtual: e.target.value})}
+                                placeholder="Senha Atual" 
+                                className="w-full bg-input border border-border p-4 pr-12 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" 
+                              />
+                              <button 
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                              </button>
+                            </div>
+
+                            {/* Input Nova Senha */}
+                            <div className="relative">
+                              <input 
+                                type={showPassword ? "text" : "password"} 
+                                value={passForm.novaSenha}
+                                onChange={(e) => setPassForm({...passForm, novaSenha: e.target.value})}
+                                placeholder="Nova Senha" 
+                                className="w-full bg-input border border-border p-4 pr-12 text-sm text-foreground focus:border-[#DC2626] outline-none transition-colors" 
+                              />
+                              <button 
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                              </button>
+                            </div>
+
                         </div>
-                        <button className="bg-background border border-border text-foreground px-8 py-3 text-xs uppercase hover:border-foreground transition-colors w-fit">Atualizar</button>
+                        <button 
+                          onClick={handleUpdatePassword}
+                          disabled={isUpdatingPass}
+                          className="bg-background border border-border text-foreground px-8 py-3 text-xs uppercase hover:border-foreground transition-colors w-fit disabled:opacity-50"
+                        >
+                          {isUpdatingPass ? "Atualizando..." : "Atualizar"}
+                        </button>
                     </div>
                     <div className="bg-card p-8 rounded-xl border border-border border-dashed flex flex-col items-center justify-center text-center">
                         <Shield className="w-12 h-12 mb-4 text-muted-foreground" />
@@ -292,6 +372,41 @@ export function SettingsPage({ onBack, theme, toggleTheme }: SettingsPageProps) 
           </main>
         </div>
       </div>
+
+      {/* POPUP DE SENHA (MODAL) */}
+      <AnimatePresence>
+        {passMsg && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-card border border-border p-8 rounded-xl shadow-2xl flex flex-col items-center text-center max-w-sm m-4"
+            >
+              {passMsg.type === 'success' ? (
+                <CheckCircle className="w-16 h-16 text-green-500 mb-4" />
+              ) : (
+                <Shield className="w-16 h-16 text-[#DC2626] mb-4" />
+              )}
+              <h3 className="text-lg uppercase tracking-widest text-foreground mb-2">
+                {passMsg.type === 'success' ? 'Sucesso' : 'Erro'}
+              </h3>
+              <p className="text-sm text-muted-foreground mb-6">{passMsg.text}</p>
+              <button
+                onClick={() => setPassMsg(null)}
+                className="bg-background border border-border text-foreground px-8 py-3 text-xs uppercase hover:border-foreground transition-colors w-full"
+              >
+                Fechar
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
