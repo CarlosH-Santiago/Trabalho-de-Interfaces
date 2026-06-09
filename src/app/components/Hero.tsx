@@ -11,7 +11,7 @@ export function Hero() {
         initial={{ scale: 1.1 }}
         animate={{ scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
-      >
+      > 
         <ImageWithFallback
           src="https://images.unsplash.com/photo-1764998112626-23f005c580d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBmYXNoaW9uJTIwbW9kZWwlMjBlbGVnYW50fGVufDF8fHx8MTc3MjgxMTIyOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
           alt="Luxury Fashion Collection"
@@ -41,7 +41,7 @@ export function Hero() {
             <p className="text-lg text-gray-700 mb-10 max-w-xl leading-relaxed">
               Descubra nossa nova coleção exclusiva, onde o minimalismo encontra a sofisticação em cada detalhe.
             </p>
-            <button className="group bg-[#DC2626] text-white px-8 py-4 flex items-center gap-3 hover:bg-[#B91C1C] transition-all duration-300">
+            <button className="group bg-[#DC2626] text-foreground px-8 py-4 flex items-center gap-3 hover:bg-[#B91C1C] transition-all duration-300">
               <span className="tracking-wide">Explorar Coleção</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>

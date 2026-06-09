@@ -29,9 +29,9 @@ export function ExclusiveCollection() {
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.3 }}
               viewport={{ once: true }}
-              className="absolute -bottom-8 -right-8 bg-white p-8 shadow-lg max-w-xs"
+              className="absolute -bottom-8 -right-8 bg-background p-8 shadow-lg max-w-xs"
             >
-              <p className="text-xs tracking-[0.3em] uppercase mb-2 text-[#DC2626]">Edição Limitada</p>
+              <p className="text-xs tracking-[0.3em] uppercase mb-2 text-accent">Edição Limitada</p>
               <h4 className="text-xl mb-2" style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
                 Coleção Cápsula
               </h4>
@@ -50,7 +50,7 @@ export function ExclusiveCollection() {
             className="space-y-8 lg:pl-12"
           >
             <div>
-              <p className="text-xs tracking-[0.3em] uppercase mb-6 text-gray-500">
+              <p className="text-xs tracking-[0.3em] uppercase mb-6 text-muted-foreground">
                 Exclusividade & Design
               </p>
               <h2 
@@ -89,7 +89,7 @@ export function ExclusiveCollection() {
               </div>
             </div>
 
-            <button className="group bg-[#DC2626] text-white px-8 py-4 flex items-center gap-3 hover:bg-[#B91C1C] transition-all duration-300 mt-8">
+            <button className="group bg-[#DC2626] text-foreground px-8 py-4 flex items-center gap-3 hover:bg-[#B91C1C] transition-all duration-300 mt-8">
               <span className="tracking-wide">Ver Coleção Completa</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>

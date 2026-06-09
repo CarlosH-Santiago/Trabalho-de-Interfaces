@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { Camera, X } from "lucide-react";
 import { useState } from "react";
+import { api } from "../../services/api"; 
 
 interface InventoryFormProps {
   onClose: () => void;
@@ -19,6 +20,10 @@ export function InventoryForm({ onClose }: InventoryFormProps) {
     { name: "Terracota", hex: "#E2725B" },
   ];
 
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+
+
   const toggleSize = (size: string) => {
     setSizes((prev) =>
       prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size],
@@ -30,6 +35,26 @@ export function InventoryForm({ onClose }: InventoryFormProps) {
       prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color],
     );
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault(); // Impede a página de recarregar
+  console.log("Tentando enviar:", { name, price });
+  
+  try {
+    await api.createProduct({
+      name: name,
+      category: "Geral", // Placeholder, já que o form não tem esse campo
+      price: Number(price),
+      image: "https://images.unsplash.com/photo-1626987937686-e8806e7bc8fc?q=80&w=1080" // Placeholder
+    });
+    
+    alert("Produto cadastrado com sucesso!");
+    onClose(); // Fecha o modal após sucesso
+  } catch (err) {
+    console.error(err);
+    alert("Erro ao cadastrar. Verifique se a API do João está rodando.");
+  }
+};
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
@@ -48,7 +73,7 @@ export function InventoryForm({ onClose }: InventoryFormProps) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ type: "spring", duration: 0.5 }}
-        className="relative bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl"
+        className="relative bg-background w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl"
       >
         <div className="p-8 md:p-12">
           {/* Close Button */}
@@ -60,7 +85,7 @@ export function InventoryForm({ onClose }: InventoryFormProps) {
           </button>
 
           <div className="mb-12">
-            <p className="text-xs tracking-[0.3em] uppercase mb-4 text-[#DC2626]">
+            <p className="text-xs tracking-[0.3em] uppercase mb-4 text-accent">
               Gestão de Estoque
             </p>
             <h2
@@ -74,21 +99,23 @@ export function InventoryForm({ onClose }: InventoryFormProps) {
             </h2>
           </div>
 
-          <form className="space-y-10">
+          <form onSubmit={handleSubmit} className="space-y-10">
             {/* Basic Info */}
             <div className="grid md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-xs tracking-widest uppercase text-gray-500">
+                <label className="text-xs tracking-widest uppercase text-muted-foreground">
                   Nome do Produto
                 </label>
                 <input
                   type="text"
-                  className="w-full px-0 py-3 border-b border-gray-200 focus:border-black outline-none transition-colors bg-transparent"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-0 py-3 border-b border-gray-200 focus:border-black outline-none transition-colors bg-transparent text-foreground"
                   placeholder="Ex: Blazer Alfaiataria Lã"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-xs tracking-widest uppercase text-gray-500">
+                <label className="text-xs tracking-widest uppercase text-muted-foreground">
                   Marca
                 </label>
                 <input
@@ -101,7 +128,7 @@ export function InventoryForm({ onClose }: InventoryFormProps) {
 
             {/* Descrição */}
             <div className="space-y-2">
-              <label className="text-xs tracking-widest uppercase text-gray-500">
+              <label className="text-xs tracking-widest uppercase text-muted-foreground">
                 Descrição do Produto
               </label>
               <textarea
@@ -113,23 +140,26 @@ export function InventoryForm({ onClose }: InventoryFormProps) {
 
             <div className="grid md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-xs tracking-widest uppercase text-gray-500">
+                <label className="text-xs tracking-widest uppercase text-muted-foreground">
                   Valor (R$)
                 </label>
+                {/* Valor (R$) */}
                 <input
                   type="number"
-                  className="w-full px-0 py-3 border-b border-gray-200 focus:border-black outline-none transition-colors bg-transparent"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  className="w-full px-0 py-3 border-b border-gray-200 focus:border-black outline-none transition-colors bg-transparent text-foreground"
                   placeholder="0,00"
                 />
               </div>
               <div className="space-y-4">
-                <label className="text-xs tracking-widest uppercase text-gray-500">
+                <label className="text-xs tracking-widest uppercase text-muted-foreground">
                   Fotos do Produto
                 </label>
                 <div className="flex gap-4">
                   <button
                     type="button"
-                    className="w-20 h-20 border border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 hover:border-black hover:text-black transition-all gap-1"
+                    className="w-20 h-20 border border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 hover:border-black hover:text-foreground transition-all gap-1"
                   >
                     <Camera className="w-5 h-5" />
                     <span className="text-[10px] uppercase tracking-tighter">
@@ -142,7 +172,7 @@ export function InventoryForm({ onClose }: InventoryFormProps) {
 
             {/* Sizes */}
             <div className="space-y-4">
-              <label className="text-xs tracking-widest uppercase text-gray-500">
+              <label className="text-xs tracking-widest uppercase text-muted-foreground">
                 Tamanhos Disponíveis
               </label>
               <div className="flex flex-wrap gap-3">
@@ -153,8 +183,8 @@ export function InventoryForm({ onClose }: InventoryFormProps) {
                     onClick={() => toggleSize(size)}
                     className={`w-12 h-12 flex items-center justify-center text-xs tracking-widest border transition-all ${
                       sizes.includes(size)
-                        ? "bg-black text-white border-black"
-                        : "bg-white text-gray-600 border-gray-200 hover:border-black"
+                        ? "bg-black text-foreground border-black"
+                        : "bg-background text-gray-600 border-gray-200 hover:border-black"
                     }`}
                   >
                     {size}
@@ -165,7 +195,7 @@ export function InventoryForm({ onClose }: InventoryFormProps) {
 
             {/* Cores */}
             <div className="space-y-4">
-              <label className="text-xs tracking-widest uppercase text-gray-500">
+              <label className="text-xs tracking-widest uppercase text-muted-foreground">
                 Cores Disponíveis
               </label>
               <div className="flex flex-wrap gap-8">
@@ -181,7 +211,7 @@ export function InventoryForm({ onClose }: InventoryFormProps) {
                       style={{ backgroundColor: color.hex }}
                     />
                     <span
-                      className={`text-[10px] uppercase tracking-widest transition-colors ${colors.includes(color.name) ? "text-black font-semibold" : "text-gray-400"}`}
+                      className={`text-[10px] uppercase tracking-widest transition-colors ${colors.includes(color.name) ? "text-foreground font-semibold" : "text-gray-400"}`}
                     >
                       {color.name}
                     </span>
@@ -194,7 +224,7 @@ export function InventoryForm({ onClose }: InventoryFormProps) {
             <div className="pt-12 border-t border-black/5">
               <button
                 type="submit"
-                className="group relative bg-black text-white px-12 py-5 overflow-hidden transition-all hover:bg-[#DC2626]"
+                className="group relative bg-black text-foreground px-12 py-5 overflow-hidden transition-all hover:bg-[#DC2626]"
               >
                 <span className="relative z-10 text-xs tracking-[0.3em] uppercase">
                   Cadastrar Produto
